@@ -250,6 +250,10 @@ func (p *defaultProvisioner) provisionElectronFinishDarwinReplace(appName string
 	for _, path := range []string{
 		filepath.Join(paths.electronDirectory, "Electron.app", "Contents", "Info.plist"),
 		filepath.Join(paths.electronDirectory, "Electron.app", "Contents", "Frameworks", "Electron Helper.app", "Contents", "Info.plist"),
+		filepath.Join(paths.electronDirectory, "Electron.app", "Contents", "Frameworks", "Electron Helper (GPU).app", "Contents", "Info.plist"),
+		filepath.Join(paths.electronDirectory, "Electron.app", "Contents", "Frameworks", "Electron Helper (Plugin).app", "Contents", "Info.plist"),
+		filepath.Join(paths.electronDirectory, "Electron.app", "Contents", "Frameworks", "Electron Helper (Renderer).app", "Contents", "Info.plist"),
+
 	} {
 		// Log
 		p.l.Debugf("Replacing in %s", path)
@@ -292,7 +296,9 @@ func (p *defaultProvisioner) provisionElectronFinishDarwinRename(appName string,
 		{src: filepath.Join(paths.electronDirectory, "Electron.app"), dst: appDirectory},
 		{src: filepath.Join(appDirectory, "Contents", "MacOS", "Electron"), dst: paths.AppExecutable()},
 		{src: filepath.Join(frameworksDirectory, "Electron Helper.app"), dst: filepath.Join(helper)},
-		{src: filepath.Join(helper, "Contents", "MacOS", "Electron Helper"), dst: filepath.Join(helper, "Contents", "MacOS", appName+" Helper")},
+		{src: filepath.Join(frameworksDirectory, "Electron Helper (GPU).app"), dst: filepath.Join(frameworksDirectory, appName+" Helper (GPU).app")},
+		{src: filepath.Join(frameworksDirectory, "Electron Helper (Plugin).app"), dst: filepath.Join(frameworksDirectory, appName+" Helper (Plugin).app")},
+		{src: filepath.Join(frameworksDirectory, "Electron Helper (Renderer).app"), dst: filepath.Join(frameworksDirectory, appName+" Helper (Renderer).app")},
 	} {
 		p.l.Debugf("Renaming %s into %s", r.src, r.dst)
 		if err = os.Rename(r.src, r.dst); err != nil {
